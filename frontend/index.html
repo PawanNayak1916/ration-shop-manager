@@ -1,0 +1,783 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#176b50">
+
+    <title>RationFlow | Ration Shop Manager</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <a href="#" class="brand" data-go="dashboard">
+            <span class="brand-icon"><i class="fa-solid fa-store"></i></span>
+            <span>
+                <strong>RationFlow</strong>
+                <small>Shop Manager</small>
+            </span>
+        </a>
+
+        <div class="sidebar-label">WORKSPACE</div>
+
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-page="dashboard">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </button>
+
+            <button class="nav-item" data-page="purchase">
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>New Purchase</span>
+            </button>
+
+            <button class="nav-item" data-page="history">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Purchase History</span>
+            </button>
+
+            <button class="nav-item" data-page="payments">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Payments</span>
+            </button>
+
+            <button class="nav-item" data-page="ledger">
+                <i class="fa-solid fa-book-open"></i>
+                <span>Supplier Ledger</span>
+            </button>
+
+            <button class="nav-item" data-page="suppliers">
+                <i class="fa-solid fa-users"></i>
+                <span>Suppliers</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-help">
+                <i class="fa-solid fa-circle-info"></i>
+                <div>
+                    <strong>Need help?</strong>
+                    <small>Manage your shop easily.</small>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <span class="status-dot"></span>
+                <span>RationFlow Workspace</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <main class="main-area">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="icon-button menu-toggle" id="menu-toggle"
+                        aria-label="Toggle menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div>
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-subtitle">Your shop at a glance</p>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <div class="today-label">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span id="current-date">Today</span>
+                </div>
+
+                <button class="primary-button" id="top-add-purchase">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>New Purchase</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="page-container">
+
+            <!-- ================= DASHBOARD ================= -->
+            <section class="page" id="dashboard-page">
+
+                <div class="welcome-row">
+                    <div>
+                        <h2>Shop Overview</h2>
+                        <p>Track your purchases, payments and supplier dues.</p>
+                    </div>
+
+                    <div class="period-control">
+                        <button class="period-button active" data-period="daily">
+                            Daily
+                        </button>
+                        <button class="period-button" data-period="monthly">
+                            Monthly
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filter-row">
+                    <div class="filter-field" id="daily-filter">
+                        <label for="dashboard-date">Select date</label>
+                        <input type="date" id="dashboard-date">
+                    </div>
+
+                    <div class="filter-field hidden" id="monthly-filter">
+                        <label for="dashboard-month">Select month</label>
+                        <input type="month" id="dashboard-month">
+                    </div>
+
+                    <span class="filter-note" id="period-label">
+                        Showing today's activity
+                    </span>
+                </div>
+
+                <!-- SUMMARY CARDS -->
+                <div class="stats-grid">
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-icon green">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </span>
+                            <span class="stat-caption">Selected period</span>
+                        </div>
+                        <p class="stat-label">Purchases</p>
+                        <h3 id="total-purchases">₹0</h3>
+                        <p class="stat-description">
+                            <span id="purchase-count">0</span> purchase entries
+                        </p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-icon blue">
+                                <i class="fa-solid fa-wallet"></i>
+                            </span>
+                            <span class="stat-caption">Selected period</span>
+                        </div>
+                        <p class="stat-label">Payments</p>
+                        <h3 id="total-payments">₹0</h3>
+                        <p class="stat-description">
+                            <span id="payment-count">0</span> payment entries
+                        </p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-icon orange">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </span>
+                            <span class="stat-caption">Current balance</span>
+                        </div>
+                        <p class="stat-label">Outstanding Due</p>
+                        <h3 id="current-due">₹0</h3>
+                        <p class="stat-description">Across all suppliers</p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-icon purple">
+                                <i class="fa-solid fa-users"></i>
+                            </span>
+                            <span class="stat-caption">Current status</span>
+                        </div>
+                        <p class="stat-label">Suppliers with Dues</p>
+                        <h3 id="suppliers-with-dues">0</h3>
+                        <p class="stat-description">Need payment tracking</p>
+                    </article>
+
+                </div>
+
+                <!-- CHART + QUICK ACTIONS -->
+                <div class="dashboard-grid">
+
+                    <article class="panel chart-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Purchase & Payment Summary</h3>
+                                <p id="chart-subtitle">Activity during the selected day</p>
+                            </div>
+
+                            <div class="chart-legend">
+                                <span><i class="legend-dot purchase-dot"></i> Purchases</span>
+                                <span><i class="legend-dot payment-dot"></i> Payments</span>
+                            </div>
+                        </div>
+
+                        <div class="chart-switch">
+                            <button class="chart-tab active" data-chart="purchases">
+                                Purchases
+                            </button>
+                            <button class="chart-tab" data-chart="payments">
+                                Payments
+                            </button>
+                        </div>
+
+                        <div id="dashboard-chart" class="chart-area">
+                            <div class="chart-placeholder">
+                                <i class="fa-solid fa-chart-column"></i>
+                                <p>Your chart will appear here when data is available.</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="panel quick-actions-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Quick Actions</h3>
+                                <p>Common tasks</p>
+                            </div>
+                        </div>
+
+                        <button class="quick-action" data-go="purchase">
+                            <span class="quick-action-icon green">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                            <span>
+                                <strong>Add Purchase</strong>
+                                <small>Record newly received goods</small>
+                            </span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                        <button class="quick-action" data-go="payments">
+                            <span class="quick-action-icon blue">
+                                <i class="fa-solid fa-money-bill-transfer"></i>
+                            </span>
+                            <span>
+                                <strong>Record Payment</strong>
+                                <small>Pay a supplier</small>
+                            </span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                        <button class="quick-action" data-go="ledger">
+                            <span class="quick-action-icon orange">
+                                <i class="fa-solid fa-book-open"></i>
+                            </span>
+                            <span>
+                                <strong>View Ledger</strong>
+                                <small>Check supplier balances</small>
+                            </span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </article>
+
+                </div>
+
+                <!-- RECENT ACTIVITY -->
+                <article class="panel recent-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Recent Purchases</h3>
+                            <p>Your latest purchase entries</p>
+                        </div>
+                        <button class="text-button" data-go="history">
+                            View all <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Supplier</th>
+                                <th>Items</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody id="recent-purchases">
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    No purchases recorded yet.
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+            </section>
+
+            <!-- ================= NEW PURCHASE ================= -->
+            <section class="page hidden" id="purchase-page">
+
+                <div class="section-intro">
+                    <div>
+                        <h2>Record New Purchase</h2>
+                        <p>Enter the goods received from your supplier.</p>
+                    </div>
+                </div>
+
+                <form id="purchase-form">
+
+                    <article class="panel form-panel">
+                        <div class="form-section-title">
+                            <span class="section-number">01</span>
+                            <div>
+                                <h3>Purchase Details</h3>
+                                <p>Supplier and purchase date</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid two-columns">
+                            <div class="form-field">
+                                <label for="supplier-name">Supplier Name *</label>
+                                <input id="supplier-name" name="supplierName"
+                                       type="text" placeholder="Enter supplier name"
+                                       list="supplier-options" required>
+                                <datalist id="supplier-options"></datalist>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="purchase-date">Purchase Date *</label>
+                                <input id="purchase-date" name="purchaseDate"
+                                       type="date" required>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="panel form-panel">
+                        <div class="form-section-title">
+                            <span class="section-number">02</span>
+                            <div>
+                                <h3>Items Purchased</h3>
+                                <p>Add each product included in this purchase.</p>
+                            </div>
+                        </div>
+
+                        <div class="items-table-header">
+                            <span>Item Name</span>
+                            <span>Price / Unit (₹)</span>
+                            <span>Quantity</span>
+                            <span>Item Total</span>
+                            <span></span>
+                        </div>
+
+                        <div id="items-container"></div>
+
+                        <button type="button" class="secondary-button" id="add-item">
+                            <i class="fa-solid fa-plus"></i> Add Another Item
+                        </button>
+
+                        <div class="purchase-total-box">
+                            <div>
+                                <span>Total item types</span>
+                                <strong id="item-count">0</strong>
+                            </div>
+                            <div>
+                                <span>Grand Total</span>
+                                <strong id="grand-total">₹0.00</strong>
+                            </div>
+                        </div>
+                    </article>
+
+                    <div class="form-actions">
+                        <button type="reset" class="secondary-button" id="cancel-purchase">
+                            Clear Form
+                        </button>
+                        <button type="submit" class="primary-button">
+                            <i class="fa-solid fa-floppy-disk"></i> Save Purchase
+                        </button>
+                    </div>
+
+                </form>
+            </section>
+
+            <!-- ================= PURCHASE HISTORY ================= -->
+            <section class="page hidden" id="history-page">
+
+                <div class="section-intro">
+                    <div>
+                        <h2>Purchase History</h2>
+                        <p>Review your previous purchases.</p>
+                    </div>
+                    <button class="primary-button" data-go="purchase">
+                        <i class="fa-solid fa-plus"></i> New Purchase
+                    </button>
+                </div>
+
+                <article class="panel">
+                    <div class="filter-toolbar">
+                        <div class="search-field">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input id="purchase-search" type="search"
+                                   placeholder="Search supplier or item...">
+                        </div>
+
+                        <div class="filter-field">
+                            <label for="history-from">From</label>
+                            <input type="date" id="history-from">
+                        </div>
+
+                        <div class="filter-field">
+                            <label for="history-to">To</label>
+                            <input type="date" id="history-to">
+                        </div>
+
+                        <button class="secondary-button" id="clear-history-filters">
+                            Clear Filters
+                        </button>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Supplier</th>
+                                <th>Items</th>
+                                <th>Total Amount</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="history-purchases">
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    No purchases recorded yet.
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ================= PAYMENTS ================= -->
+            <section class="page hidden" id="payments-page">
+
+                <div class="section-intro">
+                    <div>
+                        <h2>Supplier Payments</h2>
+                        <p>Record payments made to your suppliers.</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid payment-summary-grid">
+                    <article class="stat-card">
+                        <p class="stat-label">Payments This Month</p>
+                        <h3 id="payments-month-total">₹0</h3>
+                    </article>
+                    <article class="stat-card">
+                        <p class="stat-label">Total Outstanding Due</p>
+                        <h3 id="payments-current-due">₹0</h3>
+                    </article>
+                </div>
+
+                <article class="panel form-panel">
+                    <div class="form-section-title">
+                        <span class="section-number">01</span>
+                        <div>
+                            <h3>Record a Payment</h3>
+                            <p>Enter the amount paid to a supplier.</p>
+                        </div>
+                    </div>
+
+                    <form id="payment-form">
+                        <div class="form-grid two-columns">
+                            <div class="form-field">
+                                <label for="payment-supplier">Supplier Name *</label>
+                                <input id="payment-supplier" name="supplierName"
+                                       type="text" placeholder="Enter supplier name"
+                                       list="supplier-options" required>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="payment-date">Payment Date *</label>
+                                <input id="payment-date" name="paymentDate"
+                                       type="date" required>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="payment-amount">Amount Paid (₹) *</label>
+                                <input id="payment-amount" name="amount"
+                                       type="number" min="0.01" step="0.01"
+                                       placeholder="e.g. 2000" required>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="payment-method">Payment Method</label>
+                                <select id="payment-method" name="paymentMethod">
+                                    <option value="Cash">Cash</option>
+                                    <option value="UPI">UPI</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-field full-width">
+                                <label for="payment-note">Note (Optional)</label>
+                                <input id="payment-note" name="note" type="text"
+                                       placeholder="e.g. Advance or bill reference">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="reset" class="secondary-button">
+                                Clear Form
+                            </button>
+                            <button type="submit" class="primary-button">
+                                <i class="fa-solid fa-check"></i> Save Payment
+                            </button>
+                        </div>
+                    </form>
+                </article>
+
+                <article class="panel recent-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Payment History</h3>
+                            <p>Previously recorded supplier payments</p>
+                        </div>
+                        <button class="text-button" data-go="ledger">
+                            Open Ledger <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="filter-toolbar">
+                        <div class="search-field">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input id="payment-search" type="search"
+                                   placeholder="Search supplier...">
+                        </div>
+                        <div class="filter-field">
+                            <label for="payment-history-from">From</label>
+                            <input type="date" id="payment-history-from">
+                        </div>
+                        <div class="filter-field">
+                            <label for="payment-history-to">To</label>
+                            <input type="date" id="payment-history-to">
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Supplier</th>
+                                <th>Method</th>
+                                <th>Note</th>
+                                <th>Amount Paid</th>
+                            </tr>
+                            </thead>
+                            <tbody id="payment-history">
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    No payments recorded yet.
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ================= SUPPLIER LEDGER ================= -->
+            <section class="page hidden" id="ledger-page">
+
+                <div class="section-intro">
+                    <div>
+                        <h2>Supplier Ledger</h2>
+                        <p>View purchases, payments and outstanding balance for each supplier.</p>
+                    </div>
+                </div>
+
+                <article class="panel ledger-selector-panel">
+                    <div class="form-grid two-columns">
+                        <div class="form-field">
+                            <label for="ledger-supplier">Select Supplier *</label>
+                            <input id="ledger-supplier" type="text"
+                                   list="supplier-options"
+                                   placeholder="Search supplier by name">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="ledger-from">From Date</label>
+                            <input id="ledger-from" type="date">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="ledger-to">To Date</label>
+                            <input id="ledger-to" type="date">
+                        </div>
+
+                        <div class="form-field ledger-actions">
+                            <label>&nbsp;</label>
+                            <button class="primary-button" id="view-ledger" type="button">
+                                <i class="fa-solid fa-magnifying-glass"></i> View Ledger
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <div class="stats-grid ledger-summary-grid">
+                    <article class="stat-card">
+                        <p class="stat-label">Total Purchases</p>
+                        <h3 id="ledger-total-purchases">₹0</h3>
+                    </article>
+                    <article class="stat-card">
+                        <p class="stat-label">Total Payments</p>
+                        <h3 id="ledger-total-payments">₹0</h3>
+                    </article>
+                    <article class="stat-card">
+                        <p class="stat-label">Outstanding Balance</p>
+                        <h3 id="ledger-balance">₹0</h3>
+                    </article>
+                </div>
+
+                <article class="panel recent-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3 id="ledger-heading">Account Transactions</h3>
+                            <p>Purchases increase the balance; payments reduce it.</p>
+                        </div>
+                        <button class="secondary-button" id="print-ledger" type="button">
+                            <i class="fa-solid fa-print"></i> Print
+                        </button>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Transaction Details</th>
+                                <th>Purchase / Debit</th>
+                                <th>Payment / Credit</th>
+                                <th>Running Balance</th>
+                            </tr>
+                            </thead>
+                            <tbody id="ledger-transactions">
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    Select a supplier to view their ledger.
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <!-- ================= SUPPLIERS ================= -->
+            <section class="page hidden" id="suppliers-page">
+
+                <div class="section-intro">
+                    <div>
+                        <h2>Suppliers</h2>
+                        <p>Manage the suppliers you purchase goods from.</p>
+                    </div>
+                    <button class="primary-button" id="add-supplier-button" type="button">
+                        <i class="fa-solid fa-plus"></i> Add Supplier
+                    </button>
+                </div>
+
+                <article class="panel">
+                    <div class="filter-toolbar">
+                        <div class="search-field">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input id="supplier-search" type="search"
+                                   placeholder="Search supplier...">
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Supplier Name</th>
+                                <th>Total Purchases</th>
+                                <th>Total Payments</th>
+                                <th>Outstanding Due</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="suppliers-table">
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    Supplier information will appear here.
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="main-footer">
+            <span>RationFlow · Ration Shop Manager</span>
+            <span>Purchase tracking made simple</span>
+        </footer>
+    </main>
+</div>
+
+<!-- TOAST NOTIFICATIONS -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<!-- ADD SUPPLIER DIALOG -->
+<dialog id="supplier-dialog" class="supplier-dialog">
+    <form id="supplier-form">
+        <div class="panel-heading">
+            <div>
+                <h3>Add Supplier</h3>
+                <p>Enter supplier details.</p>
+            </div>
+            <button type="button" class="icon-button" id="close-supplier-dialog"
+                    aria-label="Close dialog">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-field">
+                <label for="new-supplier-name">Supplier Name *</label>
+                <input id="new-supplier-name" name="name" type="text"
+                       placeholder="Supplier name" required>
+            </div>
+
+            <div class="form-field">
+                <label for="new-supplier-phone">Phone Number</label>
+                <input id="new-supplier-phone" name="phone" type="tel"
+                       placeholder="Optional phone number">
+            </div>
+
+            <div class="form-field">
+                <label for="new-supplier-address">Address</label>
+                <textarea id="new-supplier-address" name="address" rows="3"
+                          placeholder="Optional address"></textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="secondary-button" id="cancel-supplier-dialog">
+                Cancel
+            </button>
+            <button type="submit" class="primary-button">
+                Save Supplier
+            </button>
+        </div>
+    </form>
+</dialog>
+
+</body>
+</html>

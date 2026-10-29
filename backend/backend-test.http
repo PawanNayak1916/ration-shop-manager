@@ -1,0 +1,21 @@
+
+### Test 1: Get all purchases
+GET http://localhost:8080/api/purchase
+Accept: application/json
+
+
+### Test 2: Add a purchase
+POST http://localhost:8080/api/purchase
+Content-Type: application/json
+Accept: application/json
+
+{
+  "supplierName": "Testing Supplier",
+  "items": [
+    {
+      "itemName": "Rice",
+      "pricePerUnit": 20,
+      "quantity": 5
+    }
+  ]
+}
